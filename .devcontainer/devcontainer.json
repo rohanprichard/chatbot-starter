@@ -1,0 +1,38 @@
+{
+  "name": "Chatbot App Dev Container",
+  "dockerFile": "Dockerfile",
+  "forwardPorts": [
+    3000,  // Frontend
+    8000,  // Backend
+    3306,  // DB
+    8080  // Adminer
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash",
+            "icon": "terminal-bash"
+          }
+        }
+      }
+    }
+  },
+  "postCreateCommand": "pip3 install -r requirements.txt",
+  "remoteUser": "vscode"
+} 

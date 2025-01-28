@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+    # Mounts the project root into the container with cached volumes.
+    volumes:
+      - ../../:/workspaces:cached
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "chatbot"
+      MYSQL_USER: "chatbot"
+      MYSQL_PASSWORD: "password"
+    volumes:
+      - ../data-db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
