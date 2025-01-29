@@ -18,9 +18,8 @@
         "ms-azuretools.vscode-docker"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
-        "python.linting.enabled": true,
-        "python.linting.pylintEnabled": true,
+        "python.pythonPath": "/usr/local/bin/python",
+        "pylint.enabled": true,
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "terminal.integrated.defaultProfile.linux": "bash",

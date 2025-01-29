@@ -10,7 +10,17 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     vim \
     less \
+    gnupg \
     && rm -rf /var/lib/apt/lists/*
+
+# Set up Node.js repository and install Node.js + npm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get update && apt-get install -y nodejs \
+    && npm install -g npm@latest \
+    && rm -rf /var/lib/apt/lists/*
+
+# Verify installations
+RUN node --version && npm --version
 
 # Set up Python environment
 RUN pip3 install --upgrade pip
