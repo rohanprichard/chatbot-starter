@@ -15,6 +15,7 @@ import { LightModeWarningModal } from "@/components/light-mode-warning-modal"
 import { Sidebar } from "@/components/sidebar"
 import { Overlay } from "@/components/overlay"
 import { Playfair_Display } from "next/font/google"
+import Image from "next/image"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -79,19 +80,6 @@ const mockMessages: { [key: string]: Message[] } = {
   ],
 }
 
-const PlatypusIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 512 512"
-    className="h-8 w-8 mr-2"
-    fill="currentColor"
-  >
-    <path d="M432 256c0 17.7-14.3 32-32 32H336c-17.7 0-32-14.3-32-32s14.3-32 32-32h64c17.7 0 32 14.3 32 32zm-336-32h64c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm336-96H96C43 128 0 171 0 224v64c0 53 43 96 96 96h320c53 0 96-43 96-96v-64c0-53-43-96-96-96zm-64 160c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16v-32c0-8.8 7.2-16 16-16h176c8.8 0 16 7.2 16 16v32z"/>
-    <circle cx="144" cy="288" r="32"/>
-    <circle cx="368" cy="288" r="32"/>
-  </svg>
-)
-
 export default function ChatPage() {
   const [sessions, setSessions] = useState<ChatSession[]>([])
   const [activeSession, setActiveSession] = useState<string | null>(null)
@@ -99,7 +87,6 @@ export default function ChatPage() {
   const [input, setInput] = useState("")
   const { theme, setTheme } = useTheme()
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false)
-  const [hasShownWarning, setHasShownWarning] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isLoadingSessions, setIsLoadingSessions] = useState(true)
   const [isLoadingMessages, setIsLoadingMessages] = useState(false)
@@ -159,7 +146,6 @@ export default function ChatPage() {
 
   const handleConfirmLightMode = () => {
     setIsWarningModalOpen(false)
-    setHasShownWarning(true)
     setTheme("light")
     console.log("Light mode switched", theme)
   }
@@ -173,9 +159,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div
-      className={`flex h-screen bg-gradient-to-br from-yellow-light to-yellow dark:from-background dark:to-background ${playfair.variable}`}
-    >
+    <div className="flex h-screen bg-gradient-to-br from-background to-background transition-[background-color] duration-500 ease-in-out ${playfair.variable}">
       {/* Sidebar */}
       <Sidebar
         sessions={sessions}
@@ -189,14 +173,18 @@ export default function ChatPage() {
 
       {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-hidden">
+
         {/* Top bar */}
-        <div className="bg-yellow dark:bg-turquoise p-4 flex items-center justify-between shadow-md">
+        <div className="bg-background p-4 flex items-center justify-between">
           <div className="flex items-center">
             <Button variant="ghost" size="icon" onClick={toggleSidebar} className="mr-2 md:hidden">
-              <Menu className="h-6 w-6 text-yellow-dark dark:text-turquoise-light" />
+              <Menu className="h-6 w-6 text-foreground" />
             </Button>
-            <PlatypusIcon />
-            <h1 className="text-xl md:text-2xl font-bold text-yellow-dark dark:text-turquoise-light font-playfair">
+            <Image width="48" height="48" 
+            src="/assets/images/platypus.png" 
+            alt="Platypus"
+            className="mr-2"/>
+            <h1 className="text-xl md:text-2xl font-bold text-foreground font-playfair">
               Chatypus
             </h1>
           </div>

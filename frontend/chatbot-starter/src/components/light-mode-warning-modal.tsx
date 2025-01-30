@@ -30,10 +30,10 @@ export function LightModeWarningModal({ isOpen, onConfirm, onCancel }: LightMode
     <Dialog open={isOpen} onOpenChange={onCancel}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-xl md:text-2xl font-bold text-yellow-dark dark:text-turquoise">
+          <DialogTitle className="text-xl md:text-2xl font-bold">
             Warning
           </DialogTitle>
-          <DialogDescription className="text-gray-700 dark:text-gray-300 text-sm md:text-base">
+          <DialogDescription className="text-foreground/70 text-sm md:text-base">
             There is a reason why this site is in dark mode by default. Are you sure you want to be blinded?
           </DialogDescription>
         </DialogHeader>
@@ -41,13 +41,13 @@ export function LightModeWarningModal({ isOpen, onConfirm, onCancel }: LightMode
           <Button
             variant="outline"
             onClick={onCancel}
-            className="w-full sm:w-auto border-yellow dark:border-turquoise text-yellow-dark dark:text-turquoise rounded-2xl"
+            className="w-full sm:w-auto rounded-2xl"
           >
             No, keep it dark
           </Button>
           <Button
             onClick={onConfirm}
-            className="w-full sm:w-auto bg-yellow dark:bg-turquoise text-yellow-dark dark:text-turquoise-light rounded-2xl"
+            className="w-full sm:w-auto rounded-2xl"
           >
             Yes, I&apos;m sure
           </Button>

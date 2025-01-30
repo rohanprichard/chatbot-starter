@@ -30,7 +30,7 @@ export function Sidebar({
     <div className="p-4 h-full flex flex-col">
       <Button
         variant="outline"
-        className="w-full mb-4 bg-yellow dark:bg-turquoise hover:bg-yellow-dark dark:hover:bg-turquoise-dark transition-all duration-300 transform hover:scale-105 rounded-2xl"
+        className="w-full mb-4 hover:bg-foreground/10 transition-all duration-300 transform hover:scale-105 rounded-2xl"
         onClick={onNewSession}
         disabled={isLoading}
       >
@@ -50,8 +50,8 @@ export function Sidebar({
                 className={cn(
                   "w-full justify-start mb-2 transition-all duration-300 transform hover:scale-105 rounded-xl",
                   activeSession === session.id
-                    ? "bg-yellow dark:bg-turquoise hover:bg-yellow-dark dark:hover:bg-turquoise-dark"
-                    : "hover:bg-yellow-light darkhover:bg-yellow-light dark:hover:bg-turquoise-light",
+                    ? "bg-foreground/20 hover:bg-foreground/30"
+                    : "hover:bg-foreground/10"
                 )}
                 onClick={() => onSessionSelect(session.id)}
               >

@@ -34,12 +34,12 @@ export function ThemeToggle({ onLightModeSwitch }: ThemeToggleProps) {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="relative w-10 h-10 rounded-full bg-yellow dark:bg-turquoise"
+      className="relative w-10 h-10 rounded-full bg-foreground/10"
     >
       {theme === "dark" ? (
-        <Sun className="h-[1.2rem] w-[1.2rem] text-white" />
+        <Sun className="h-[1.2rem] w-[1.2rem] text-foreground" />
       ) : (
-        <Moon className="h-[1.2rem] w-[1.2rem] text-yellow-dark" />
+        <Moon className="h-[1.2rem] w-[1.2rem] text-foreground" />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>
