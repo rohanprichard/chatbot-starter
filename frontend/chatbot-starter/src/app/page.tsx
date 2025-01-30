@@ -154,9 +154,7 @@ export default function ChatPage() {
   }
 
   const handleLightModeSwitch = () => {
-    if (!hasShownWarning) {
-      setIsWarningModalOpen(true)
-    } 
+    setIsWarningModalOpen(true)
   }
 
   const handleConfirmLightMode = () => {
