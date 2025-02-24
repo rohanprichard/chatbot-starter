@@ -34,14 +34,11 @@ ARG USER_GID=$USER_UID
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 
-# Add .local/bin to PATH
 ENV PATH="/home/${USERNAME}/.local/bin:${PATH}"
 
-# Set up bash completion and shell improvements
 COPY .bashrc /home/${USERNAME}/.bashrc
 RUN chown ${USERNAME}:${USERNAME} /home/${USERNAME}/.bashrc
 
-# Switch to the user
 USER $USERNAME
 
 WORKDIR /workspace
