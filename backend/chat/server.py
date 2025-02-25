@@ -13,10 +13,13 @@ router = APIRouter()
 
 @router.post("/")
 async def chat(request: ChatRequest):
+    
     logger.info(f"Chat request received: {request.message}")
 
     prompt = get_prompt("chat-prompt")
-    return StreamingResponse(generate_response(prompt, [{"role": "user", "content": request.message}]), media_type="text/event-stream") 
+    messages = [{"role": "user", "content": request.message}]
+
+    return StreamingResponse(generate_response(prompt, messages), media_type="text/event-stream") 
 
 
 @router.get("/initiate")
