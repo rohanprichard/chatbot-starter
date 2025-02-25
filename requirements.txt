@@ -3,6 +3,5 @@ pydantic
 sqlalchemy
 alembic
 uvicorn
-mysql-connector-python
 python-dotenv
-pymysql
+psycopg

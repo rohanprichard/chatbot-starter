@@ -1,30 +1,24 @@
 from logging.config import fileConfig
 import os
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
+from sqlalchemy import engine_from_config, pool
 from alembic import context
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+from backend.env import DATABASE_URL
 
 # This is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
 # Interpret the config file for Python logging.
-if config.config_file_name is None:
+if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Import your model's MetaData object for 'autogenerate' support.
-from backend.database.models import Base  # Update the import path as needed
+from backend.database.models import Base  # Adjust as needed
 target_metadata = Base.metadata
 
-# Optionally override sqlalchemy.url if using an environment variable.
-db_url = os.getenv("DATABASE_URL")
-if db_url:
-    config.set_main_option("sqlalchemy.url", db_url)
+# Set SQLAlchemy URL to the processed postgresql+psycopg string.
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
