@@ -47,7 +47,7 @@ async def chat(request: MessageRequest, db: Session = Depends(get_db), current_u
     message_data = {
         'user_message_id': user_message.id,
         'ai_message_id': ai_message.id,
-        'created_at': json.dumps(ai_message.created_at)
+        'created_at': ai_message.created_at.isoformat()
     }
     
     async def stream_with_ids():
