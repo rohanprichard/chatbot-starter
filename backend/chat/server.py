@@ -34,7 +34,7 @@ async def chat(request: MessageRequest, db: Session = Depends(get_db), current_u
     )
 
     prompt = get_prompt("chat-prompt")
-    messages = [{"role": "user", "content": request.message}]
+    messages = get_all_messages_from_chat(chat.id, db)
 
     ai_message = save_message(
         chat_id=chat.id,
@@ -44,7 +44,6 @@ async def chat(request: MessageRequest, db: Session = Depends(get_db), current_u
         db=db
     )
     
-    # Extract the necessary data before the session closes
     message_data = {
         'user_message_id': user_message.id,
         'ai_message_id': ai_message.id,
@@ -74,7 +73,7 @@ async def initiate(
     chat = get_or_create_chat(user_id=user.id, db=db)
 
     messages = get_all_messages_from_chat(chat.id, db=db)
-
+    #  TODO: Add opener message
     return ChatResponse(
         id=chat.id,
         messages=[MessageResponse(

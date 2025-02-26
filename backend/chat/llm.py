@@ -21,6 +21,8 @@ async def generate_response(prompt: str, messages: list[dict]):
             model=LLM_MODEL,
             messages=[{"role": "system", "content": prompt}] + messages,
             stream=True,
+            temperature=0.2,
+            max_tokens=200,
         )
 
     elif LLM_PROVIDER == "anthropic":
@@ -30,6 +32,8 @@ async def generate_response(prompt: str, messages: list[dict]):
             messages=messages,
             system=prompt,
             stream=True,
+            temperature=0.2,
+            max_tokens=200,
         )
 
     async for chunk in stream:
