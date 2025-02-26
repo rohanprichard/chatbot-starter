@@ -35,13 +35,14 @@ class Chat(Base):
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     messages = relationship("Message", back_populates="chat")
+    user = relationship("User", back_populates="chats")
 
 
 class Message(Base):
     __tablename__ = "message"
     id = Column(String, primary_key=True, default=lambda: str(uuid4()))
     chat_id = Column(String, ForeignKey("chat.id"), nullable=False)
-    type = Column(Enum("text", "button", "resource"), nullable=False)
+    type = Column(String, nullable=False)
 
     content = Column(String, nullable=False)
     is_user = Column(Boolean, nullable=False)
