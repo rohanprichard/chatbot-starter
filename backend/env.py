@@ -17,6 +17,8 @@ DATABASE_URL = get_database_url()
 LLM_API_KEY = os.getenv("LLM_API_KEY")
 LLM_PROVIDER = os.getenv("LLM_PROVIDER")
 LLM_MODEL = os.getenv("LLM_MODEL")
+LLM_TEMPERATURE = os.getenv("LLM_TEMPERATURE")
+LLM_MAX_TOKENS = os.getenv("LLM_MAX_TOKENS")
 
 # Generic configuration
 PORT = os.getenv("PORT")

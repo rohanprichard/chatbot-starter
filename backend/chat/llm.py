@@ -1,6 +1,6 @@
 from openai import AsyncOpenAI
 from anthropic import AsyncAnthropic
-from backend.env import LLM_API_KEY, LLM_MODEL, LLM_PROVIDER
+from backend.env import LLM_API_KEY, LLM_MODEL, LLM_PROVIDER, LLM_TEMPERATURE, LLM_MAX_TOKENS
 import logging
 
 
@@ -21,8 +21,8 @@ async def generate_response(prompt: str, messages: list[dict]):
             model=LLM_MODEL,
             messages=[{"role": "system", "content": prompt}] + messages,
             stream=True,
-            temperature=0.2,
-            max_tokens=200,
+            temperature=LLM_TEMPERATURE,
+            max_tokens=LLM_MAX_TOKENS,
         )
 
     elif LLM_PROVIDER == "anthropic":
@@ -32,8 +32,8 @@ async def generate_response(prompt: str, messages: list[dict]):
             messages=messages,
             system=prompt,
             stream=True,
-            temperature=0.2,
-            max_tokens=200,
+            temperature=LLM_TEMPERATURE,
+            max_tokens=LLM_MAX_TOKENS,
         )
 
     async for chunk in stream:

@@ -1,1 +1,1 @@
-uvicorn backend.server:app --port 8000
+uvicorn backend.server:app --port $PORT
