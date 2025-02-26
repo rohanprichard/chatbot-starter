@@ -17,3 +17,6 @@ class MessageResponseWithResources(MessageResponse):
 class MessageResponseWithButtons(MessageResponse):
     buttons: List[str]
 
+class ChatResponse(BaseModel):
+    messages: List[MessageResponse]
+

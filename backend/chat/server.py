@@ -8,10 +8,10 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from .llm import generate_response
-from .util import get_prompt
-from .model import MessageRequest
+from .util import get_prompt, update_ai_message
+from .model import MessageRequest, ChatResponse, MessageResponse
 from backend.database.models import User
-from backend.database.tools import get_or_create_chat, save_message
+from backend.database.tools import get_or_create_chat, save_message, get_all_messages_from_chat
 from backend.database.db import get_db
 from backend.auth.auth import get_current_user
 
@@ -22,24 +22,20 @@ router = APIRouter()
 @router.post("/")
 async def chat(request: MessageRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     logger.info(f"Chat request received: {request.message}")
-    
-    # Get or create a chat for this user
+
     chat = get_or_create_chat(current_user.id, db)
-    
-    # Save the user message first
+
     user_message = save_message(
         chat_id=chat.id, 
-        content=request.message, 
+        content=request.message,
         is_user=True,
         type="text",
         db=db
     )
-    
-    # Prepare to generate AI response
+
     prompt = get_prompt("chat-prompt")
     messages = [{"role": "user", "content": request.message}]
-    
-    # Create a placeholder for the AI message (we'll update content later)
+
     ai_message = save_message(
         chat_id=chat.id,
         content="",  # Empty placeholder
@@ -48,23 +44,47 @@ async def chat(request: MessageRequest, db: Session = Depends(get_db), current_u
         db=db
     )
     
+    # Extract the necessary data before the session closes
+    message_data = {
+        'user_message_id': user_message.id,
+        'ai_message_id': ai_message.id,
+        'created_at': ai_message.created_at
+    }
+    
     async def stream_with_ids():
-        yield f"data: {json.dumps({'user_message_id': user_message.id, 'ai_message_id': ai_message.id})}\n\n"
+        yield f"data: {json.dumps(message_data)}\n\n"
         
         full_response = ""
         async for content in generate_response(prompt, messages):
             full_response += content
             yield f"data: {content}\n\n"
         
-        ai_message.content = full_response
-        db.commit()
+        update_ai_message(ai_message.id, full_response)
     
     return StreamingResponse(stream_with_ids(), media_type="text/event-stream")
 
 
-@router.get("/initiate")
-async def initiate():
-    return {"message": "List of messages"}
+
+
+@router.get("/messages")
+async def initiate(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    chat = get_or_create_chat(user_id=user.id, db=db)
+
+    messages = get_all_messages_from_chat(chat.id, db=db)
+
+    return ChatResponse(
+        id=chat.id,
+        messages=[MessageResponse(
+            id=message.id,
+            content=message.content,
+            is_user=message.is_user,
+            created_at=message.created_at,
+            updated_at=message.updated_at
+        ) for message in messages]
+    )
 
 
 

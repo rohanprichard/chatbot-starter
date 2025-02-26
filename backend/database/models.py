@@ -26,8 +26,6 @@ class Chat(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid4()))
     user_id = Column(String, ForeignKey("user.id"), nullable=False)
 
-    name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
     summary = Column(String, nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)
 

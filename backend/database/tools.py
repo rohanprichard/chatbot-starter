@@ -26,8 +26,8 @@ def get_all_chats_by_user_id(user_id: str, db: Session) -> list[Chat]:
 def get_chat_by_id(chat_id: str, db: Session) -> Chat:
     return db.query(Chat).filter_by(id=chat_id).first()
 
-def create_chat(user_id: str, db: Session) -> Chat:
-    chat = Chat(user_id=user_id)
+def create_chat(db: Session, user_id: str, summary: str = "") -> Chat:
+    chat = Chat(user_id=user_id, summary=summary)
     db.add(chat)
     db.commit()
     return chat
@@ -35,7 +35,7 @@ def create_chat(user_id: str, db: Session) -> Chat:
 def get_or_create_chat(user_id: str, db: Session) -> Chat:
     chats = get_all_chats_by_user_id(user_id, db)
     if len(chats) == 0:  # TODO: Add chat refresh logic
-        chat = create_chat(user_id, db)
+        chat = create_chat(db, user_id)
     else:
         chat = chats[0]
     return chat
