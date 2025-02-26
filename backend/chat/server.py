@@ -78,10 +78,9 @@ async def initiate(
         id=chat.id,
         messages=[MessageResponse(
             id=message.id,
-            content=message.content,
+            message=message.content,
             is_user=message.is_user,
             created_at=message.created_at,
-            updated_at=message.updated_at
         ) for message in messages]
     )
 
