@@ -35,6 +35,14 @@ async def chat(request: MessageRequest, db: Session = Depends(get_db), current_u
 
     prompt = get_prompt("chat-prompt")
     messages = get_all_messages_from_chat(chat.id, db)
+    
+    serialized_messages = [
+        {
+            "content": message.content,
+            "role": "user" if message.is_user else "assistant"
+        }
+        for message in messages
+    ]
 
     ai_message = save_message(
         chat_id=chat.id,
@@ -54,7 +62,7 @@ async def chat(request: MessageRequest, db: Session = Depends(get_db), current_u
         yield f"data: {json.dumps(message_data)}\n\n"
         
         full_response = ""
-        async for content in generate_response(prompt, messages):
+        async for content in generate_response(prompt, serialized_messages):
             full_response += content
             yield f"data: {content}\n\n"
         
