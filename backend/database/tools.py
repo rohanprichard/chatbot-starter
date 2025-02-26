@@ -42,10 +42,18 @@ def get_or_create_chat(user_id: str, db: Session) -> Chat:
 
 # Message Utilities
 
-def save_message(chat_id: str, content: str, db: Session) -> Message:
-    message = Message(chat_id=chat_id, content=content)
+def save_message(db: Session, chat_id: str, content: str, is_user: bool, type: str = "text", buttons: list[str] = None, resources: list[str] = None) -> Message:
+    message = Message(
+        chat_id=chat_id, 
+        content=content, 
+        is_user=is_user,
+        type=type,
+        buttons=buttons,
+        resources=resources
+    )
     db.add(message)
     db.commit()
+    db.refresh(message)
     return message
 
 def get_all_messages_from_chat(chat_id: str, db: Session) -> list[Message]:

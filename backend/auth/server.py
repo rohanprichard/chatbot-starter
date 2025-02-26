@@ -7,8 +7,9 @@ from sqlalchemy.orm import Session
 
 from backend.database.db import get_db
 from .auth import (
-    authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+    authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user
 )
+from backend.database.models import User
 
 router = APIRouter()
 
@@ -34,3 +35,11 @@ async def login_for_access_token(
     )
     
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/me")
+async def read_users_me(
+    current_user: User = Depends(get_current_user)
+):
+    """Get details of currently authenticated user"""
+    return current_user
