@@ -45,7 +45,8 @@ async def read_users_me(
         email=current_user.email,
         name=current_user.name,
         created_at=current_user.created_at,
-        updated_at=current_user.updated_at
+        updated_at=current_user.updated_at,
+        information=current_user.information
     )
 
 
@@ -57,7 +58,21 @@ async def register(
     """User registration endpoint for password flow"""
     try:
         hashed_password = get_password_hash(user_details.password)
-        user = create_user(db=db, email=user_details.email, password=hashed_password, name=user_details.name)
+        user = create_user(
+            db=db,
+            email=user_details.email,
+            password=hashed_password,
+            name=user_details.name,
+            information={  # Store additional details in JSON format
+                "age_range": user_details.age_range,
+                "habit_struggle": user_details.habit_struggle,
+                "wellness_goals": user_details.wellness_goals,
+                "sleep_quality": user_details.sleep_quality,
+                "stress_level": user_details.stress_level,
+                "check_in_style": user_details.check_in_style,
+                "birth_month": user_details.birth_month,
+            }
+        )
         return user
     except Exception as e:
         raise HTTPException(

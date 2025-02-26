@@ -4,8 +4,8 @@ from backend.database.models import User, Chat, Message
 
 # User Utilities
 
-def create_user(db: Session, email: str, password: str, name: str) -> User:
-    user = User(name=name, email=email, password=password)
+def create_user(db: Session, email: str, password: str, name: str, information: dict) -> User:
+    user = User(name=name, email=email, password=password, information=information)
     db.add(user)
     db.commit()
     db.refresh(user)
