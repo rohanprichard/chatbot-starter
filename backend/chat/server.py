@@ -22,57 +22,60 @@ router = APIRouter()
 @router.post("/")
 async def chat(request: MessageRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     logger.info(f"Chat request received: {request.message}")
+    try:
+        chat = get_or_create_chat(current_user.id, db)
 
-    chat = get_or_create_chat(current_user.id, db)
+        user_message = save_message(
+            chat_id=chat.id, 
+            content=request.message,
+            is_user=True,
+            type="text",
+            db=db
+        )
 
-    user_message = save_message(
-        chat_id=chat.id, 
-        content=request.message,
-        is_user=True,
-        type="text",
-        db=db
-    )
+        prompt = get_prompt("chat-prompt")
+        messages = get_all_messages_from_chat(chat.id, db)
+        
+        serialized_messages = [
+            {
+                "content": message.content,
+                "role": "user" if message.is_user else "assistant"
+            }
+            for message in messages
+        ]
+        logger.debug(f"Prompt: {prompt}")
+        for message in serialized_messages:
+            logger.debug(f"Serialized message: {message}")
 
-    prompt = get_prompt("chat-prompt")
-    messages = get_all_messages_from_chat(chat.id, db)
-    
-    serialized_messages = [
-        {
-            "content": message.content,
-            "role": "user" if message.is_user else "assistant"
+        ai_message = save_message(
+            chat_id=chat.id,
+            content="",  # Empty placeholder
+            is_user=False,
+            type="text",
+            db=db
+        )
+        
+        message_data = {
+            'user_message_id': user_message.id,
+            'ai_message_id': ai_message.id,
+            'created_at': ai_message.created_at.isoformat()
         }
-        for message in messages
-    ]
-    logger.debug(f"Prompt: {prompt}")
-    for message in serialized_messages:
-        logger.debug(f"Serialized message: {message}")
-
-    ai_message = save_message(
-        chat_id=chat.id,
-        content="",  # Empty placeholder
-        is_user=False,
-        type="text",
-        db=db
-    )
-    
-    message_data = {
-        'user_message_id': user_message.id,
-        'ai_message_id': ai_message.id,
-        'created_at': ai_message.created_at.isoformat()
-    }
-    
-    async def stream_with_ids():
-        yield f"data: {json.dumps(message_data)}\n\n"
         
-        full_response = ""
-        async for content in generate_response(prompt, serialized_messages):
-            full_response += content
-            yield f"data: {content}\n\n"
+        async def stream_with_ids():
+            yield f"data: {json.dumps(message_data)}\n\n"
+            
+            full_response = ""
+            async for content in generate_response(prompt, serialized_messages):
+                full_response += content
+                yield f"data: {content}\n\n"
+            
+            update_ai_message(ai_message.id, full_response)
         
-        update_ai_message(ai_message.id, full_response)
-    
-    return StreamingResponse(stream_with_ids(), media_type="text/event-stream")
-
+        return StreamingResponse(stream_with_ids(), media_type="text/event-stream")
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error in chat: {e}")
+        return "Something went wrong"
 
 
 

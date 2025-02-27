@@ -4,7 +4,7 @@ from backend.env import LLM_API_KEY, LLM_MODEL, LLM_PROVIDER, LLM_TEMPERATURE, L
 import logging
 
 
-client = AsyncOpenAI(api_key=LLM_API_KEY)
+client = None
 logger = logging.getLogger(__name__)
 
 if LLM_PROVIDER == "openai":
@@ -25,6 +25,10 @@ async def generate_response(prompt: str, messages: list[dict]):
             max_tokens=LLM_MAX_TOKENS,
         )
 
+        async for chunk in stream:
+            content = chunk.choices[0].delta.content or ""
+            yield content
+
     elif LLM_PROVIDER == "anthropic":
         logger.info(f"Generating response with Anthropic: {LLM_MODEL}")
         stream = await client.messages.create(
@@ -36,6 +40,14 @@ async def generate_response(prompt: str, messages: list[dict]):
             max_tokens=LLM_MAX_TOKENS,
         )
 
-    async for chunk in stream:
-        content = chunk.choices[0].delta.content or ""
-        yield content
+        async for chunk in stream:
+            if hasattr(chunk, 'delta') and hasattr(chunk.delta, 'text'):
+                content = chunk.delta.text or ""
+                yield content
+            elif hasattr(chunk, 'type') and chunk.type == 'content_block_delta':
+                content = chunk.delta.text or ""
+                yield content
+            elif hasattr(chunk, 'type') and chunk.type == 'message_delta':
+                continue
+            else:
+                continue
