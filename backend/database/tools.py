@@ -4,15 +4,20 @@ from backend.database.models import User, Chat, Message
 
 # User Utilities
 
-def create_user(db: Session, email: str, password: str, name: str, information: dict) -> User:
+
+def create_user(
+    db: Session, email: str, password: str, name: str, information: dict
+) -> User:
     user = User(name=name, email=email, password=password, information=information)
     db.add(user)
     db.commit()
     db.refresh(user)
     return user
 
+
 def get_user_by_email(email: str, db: Session) -> User:
     return db.query(User).filter_by(email=email).first()
+
 
 def get_user_by_id(user_id: str, db: Session) -> User:
     return db.query(User).filter_by(id=user_id).first()
@@ -20,17 +25,23 @@ def get_user_by_id(user_id: str, db: Session) -> User:
 
 # Chat Utilities
 
+
 def get_all_chats_by_user_id(user_id: str, db: Session) -> list[Chat]:
-    return db.query(Chat).filter_by(user_id=user_id).order_by(Chat.created_at.desc()).all()
+    return (
+        db.query(Chat).filter_by(user_id=user_id).order_by(Chat.created_at.desc()).all()
+    )
+
 
 def get_chat_by_id(chat_id: str, db: Session) -> Chat:
     return db.query(Chat).filter_by(id=chat_id).first()
+
 
 def create_chat(db: Session, user_id: str, summary: str = "") -> Chat:
     chat = Chat(user_id=user_id, summary=summary)
     db.add(chat)
     db.commit()
     return chat
+
 
 def get_or_create_chat(user_id: str, db: Session) -> Chat:
     chats = get_all_chats_by_user_id(user_id, db)
@@ -43,22 +54,38 @@ def get_or_create_chat(user_id: str, db: Session) -> Chat:
 
 # Message Utilities
 
-def save_message(db: Session, chat_id: str, content: str, is_user: bool, type: str = "text", buttons: list[str] = None, resources: list[str] = None) -> Message:
+
+def save_message(
+    db: Session,
+    chat_id: str,
+    content: str,
+    is_user: bool,
+    type: str = "text",
+    buttons: list[str] = None,
+    resources: list[str] = None,
+) -> Message:
     message = Message(
-        chat_id=chat_id, 
-        content=content, 
+        chat_id=chat_id,
+        content=content,
         is_user=is_user,
         type=type,
         buttons=buttons,
-        resources=resources
+        resources=resources,
     )
     db.add(message)
     db.commit()
     db.refresh(message)
     return message
 
+
 def get_all_messages_from_chat(chat_id: str, db: Session) -> list[Message]:
-    return db.query(Message).filter_by(chat_id=chat_id).order_by(Message.created_at.asc()).all()
+    return (
+        db.query(Message)
+        .filter_by(chat_id=chat_id)
+        .order_by(Message.created_at.asc())
+        .all()
+    )
+
 
 def get_message_by_id(message_id: str, db: Session) -> Message:
     return db.query(Message).filter_by(id=message_id).first()

@@ -15,10 +15,12 @@ if config.config_file_name is not None:
 
 # Import your model's MetaData object for 'autogenerate' support.
 from backend.database.models import Base  # Adjust as needed
+
 target_metadata = Base.metadata
 
 # Set SQLAlchemy URL to the processed postgresql+psycopg string.
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
@@ -33,6 +35,7 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
+
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     connectable = engine_from_config(
@@ -46,6 +49,7 @@ def run_migrations_online() -> None:
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

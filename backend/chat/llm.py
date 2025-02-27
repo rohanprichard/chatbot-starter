@@ -1,6 +1,12 @@
 from openai import AsyncOpenAI
 from anthropic import AsyncAnthropic
-from backend.env import LLM_API_KEY, LLM_MODEL, LLM_PROVIDER, LLM_TEMPERATURE, LLM_MAX_TOKENS
+from backend.env import (
+    LLM_API_KEY,
+    LLM_MODEL,
+    LLM_PROVIDER,
+    LLM_TEMPERATURE,
+    LLM_MAX_TOKENS,
+)
 import logging
 
 
@@ -41,13 +47,13 @@ async def generate_response(prompt: str, messages: list[dict]):
         )
 
         async for chunk in stream:
-            if hasattr(chunk, 'delta') and hasattr(chunk.delta, 'text'):
+            if hasattr(chunk, "delta") and hasattr(chunk.delta, "text"):
                 content = chunk.delta.text or ""
                 yield content
-            elif hasattr(chunk, 'type') and chunk.type == 'content_block_delta':
+            elif hasattr(chunk, "type") and chunk.type == "content_block_delta":
                 content = chunk.delta.text or ""
                 yield content
-            elif hasattr(chunk, 'type') and chunk.type == 'message_delta':
+            elif hasattr(chunk, "type") and chunk.type == "message_delta":
                 continue
             else:
                 continue

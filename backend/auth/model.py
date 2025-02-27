@@ -3,17 +3,28 @@ from datetime import datetime
 from typing import List
 
 
-class UserSignupRequest(BaseModel):
-    email: str
-    password: str
-    name: str
+class UserInformation(BaseModel):
     age_range: str
     habit_struggle: str
     wellness_goals: List[str]
     sleep_quality: str
     stress_level: str
     check_in_style: str
-    birth_month: str
+
+
+class UserSignupRequest(BaseModel):
+    email: str
+    password: str
+    name: str
+    information: UserInformation
+
+
+class UserSignupResponse(BaseModel):
+    email: str
+    name: str
+    information: UserInformation
+    created_at: datetime
+    updated_at: datetime
 
 
 class UserDetailsResponse(BaseModel):

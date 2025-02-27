@@ -7,6 +7,7 @@ app = fastapi.FastAPI()
 app.include_router(chat_router, prefix="/chat", tags=["chat"])
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
+
 @app.get("/health", tags=["health"])
 def read_root():
     return {"message": "ok"}

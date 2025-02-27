@@ -4,11 +4,13 @@ import os
 
 load_dotenv()
 
+
 def get_database_url() -> str:
     url = os.getenv("DATABASE_URL")
     if url is None:
         raise ValueError("DATABASE_URL is not set")
     return url.replace("postgresql", "postgresql+psycopg")
+
 
 # DB configuration
 DATABASE_URL = get_database_url()
