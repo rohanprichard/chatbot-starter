@@ -1,0 +1,28 @@
+# Exported from Render on 2025-02-27T08:12:07Z
+services:
+- type: web
+  name: chatbot-starter
+  runtime: python
+  repo: https://github.com/rohanprichard/chatbot-starter
+  plan: free
+  envVars:
+  - key: PORT
+    sync: false
+  - key: SECRET_KEY
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  - key: LLM_MAX_TOKENS
+    sync: false
+  - key: LLM_TEMPERATURE
+    sync: false
+  - key: LLM_MODEL
+    sync: false
+  - key: LLM_PROVIDER
+    sync: false
+  - key: LLM_API_KEY
+    sync: false
+  region: singapore
+  buildCommand: pip install -r requirements.txt
+  startCommand: ./scripts/start.sh
+version: "1"
