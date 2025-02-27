@@ -43,6 +43,9 @@ async def chat(request: MessageRequest, db: Session = Depends(get_db), current_u
         }
         for message in messages
     ]
+    logger.debug(f"Prompt: {prompt}")
+    for message in serialized_messages:
+        logger.debug(f"Serialized message: {message}")
 
     ai_message = save_message(
         chat_id=chat.id,

@@ -58,7 +58,7 @@ def save_message(db: Session, chat_id: str, content: str, is_user: bool, type: s
     return message
 
 def get_all_messages_from_chat(chat_id: str, db: Session) -> list[Message]:
-    return db.query(Message).filter_by(chat_id=chat_id).order_by(Message.created_at.desc()).all()
+    return db.query(Message).filter_by(chat_id=chat_id).order_by(Message.created_at.asc()).all()
 
 def get_message_by_id(message_id: str, db: Session) -> Message:
     return db.query(Message).filter_by(id=message_id).first()
