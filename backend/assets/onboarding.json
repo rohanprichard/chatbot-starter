@@ -1,0 +1,17 @@
+{
+    "questions": [
+        {
+            "id": "af940fd2-bd13-4d5e-840c-85c59f2ba7b1",
+            "message": "What is your Gender?",
+            "is_user": false,
+            "created_at": "2025-02-27T08:19:20.132828",
+            "message_type": "button",
+            "resources": [],
+            "buttons": [
+                "Male",
+                "Female",
+                "Other"
+            ]
+        }
+    ]
+}
