@@ -1,20 +1,17 @@
 import logging
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-from typing import Union
-from datetime import datetime
 import json
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from .llm import generate_response
-from .util import get_prompt, update_ai_message
-from .model import MessageRequest, ChatResponse, MessageResponse
+from .util import get_prompt, update_ai_message, get_messages_for_chat_prediction, get_messages_for_chat_initiation
+from .model import MessageRequest, ChatResponse, MessageResponse, MessageTypes
 from backend.database.models import User
 from backend.database.tools import (
     get_or_create_chat,
     save_message,
-    get_all_messages_from_chat,
 )
 from backend.database.db import get_db
 from backend.auth.auth import get_current_user
@@ -34,28 +31,21 @@ async def chat(
         chat = get_or_create_chat(current_user.id, db)
 
         user_message = save_message(
-            chat_id=chat.id, content=request.message, is_user=True, type="text", db=db
+            chat_id=chat.id,
+            content=request.message,
+            is_user=True,
+            type=request.message_type,
+            db=db,
         )
 
         prompt = get_prompt("chat-prompt")
-        messages = get_all_messages_from_chat(chat.id, db)
-
-        serialized_messages = [
-            {
-                "content": message.content,
-                "role": "user" if message.is_user else "assistant",
-            }
-            for message in messages
-        ]
-        logger.debug(f"Prompt: {prompt}")
-        for message in serialized_messages:
-            logger.debug(f"Serialized message: {message}")
+        messages = get_messages_for_chat_prediction(chat.id, db)
 
         ai_message = save_message(
             chat_id=chat.id,
             content="",  # Empty placeholder
             is_user=False,
-            type="text",
+            type="text",  # TODO: Add type
             db=db,
         )
 
@@ -63,13 +53,14 @@ async def chat(
             "user_message_id": user_message.id,
             "ai_message_id": ai_message.id,
             "created_at": ai_message.created_at.isoformat(),
+            "message_type": ai_message.type,
         }
 
         async def stream_with_ids():
             yield f"data: {json.dumps(message_data)}\n\n"
 
             full_response = ""
-            async for content in generate_response(prompt, serialized_messages):
+            async for content in generate_response(prompt, messages):
                 full_response += content
                 yield f"data: {content}\n\n"
 
@@ -88,19 +79,12 @@ async def initiate(
 ):
     chat = get_or_create_chat(user_id=user.id, db=db)
 
-    messages = get_all_messages_from_chat(chat.id, db=db)
+    messages = get_messages_for_chat_initiation(chat.id, db=db)
     #  TODO: Add opener message
+
     return ChatResponse(
         id=chat.id,
-        messages=[
-            MessageResponse(
-                id=message.id,
-                message=message.content,
-                is_user=message.is_user,
-                created_at=message.created_at,
-            )
-            for message in messages
-        ],
+        messages=messages
     )
 
 

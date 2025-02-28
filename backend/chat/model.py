@@ -1,10 +1,18 @@
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
+from enum import Enum
+
+class MessageTypes(str, Enum):
+    TEXT = "text"
+    BUTTON = "button"
+    RESOURCE = "resource"
+    BUTTON_PRESS = "button_press"
 
 
 class MessageRequest(BaseModel):
     message: str
+    message_type: MessageTypes
 
 
 class MessageResponse(BaseModel):
@@ -12,13 +20,8 @@ class MessageResponse(BaseModel):
     message: str
     is_user: bool
     created_at: datetime
-
-
-class MessageResponseWithResources(MessageResponse):
+    message_type: MessageTypes
     resources: List[str]
-
-
-class MessageResponseWithButtons(MessageResponse):
     buttons: List[str]
 
 

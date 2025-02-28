@@ -1,6 +1,16 @@
 import fastapi
+import logging
 from .chat.server import router as chat_router
 from .auth.server import router as auth_router
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
 
 app = fastapi.FastAPI()
 
