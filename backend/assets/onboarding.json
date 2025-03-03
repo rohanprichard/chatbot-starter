@@ -1,17 +1,87 @@
 {
+    "opener": {
+        "message": "Hey! I’m Bella, your habit-building buddy. I’d love to get to know you better so I can support you in the best way possible! Let’s start with something simple...",
+        "is_user": false,
+        "created_at": "2025-02-27T08:19:20.132828",
+        "message_type": "text",
+        "resources": [],
+        "buttons": []
+    },
     "questions": [
         {
-            "id": "af940fd2-bd13-4d5e-840c-85c59f2ba7b1",
-            "message": "What is your Gender?",
-            "is_user": false,
-            "created_at": "2025-02-27T08:19:20.132828",
-            "message_type": "button",
-            "resources": [],
-            "buttons": [
-                "Male",
-                "Female",
-                "Other"
-            ]
+          "id": "name-question",
+          "message": "What should I call you?",
+          "is_user": false,
+          "created_at": "2025-03-03T08:00:00.000000",
+          "message_type": "text",
+          "resources": [],
+          "buttons": []
+        },
+        {
+          "id": "age-group-question what if we get from google", 
+          "message": "Which age group do you fall into?",
+          "is_user": false,
+          "created_at": "2025-03-03T08:03:00.000000",
+          "message_type": "button",
+          "resources": [],
+          "buttons": [
+            "18-25",
+            "26-35",
+            "36-45",
+            "46-55",
+            "56-65",
+            "66+"
+          ]
+        },
+        {
+          "id": "habit-struggles-question",
+          "message": "What's one habit that gives you the most trouble?",
+          "is_user": false,
+          "created_at": "2025-03-03T08:04:00.000000",
+          "message_type": "button",
+          "resources": [],
+          "buttons": [
+            "Too much social media",
+            "Negative self-talk",
+            "Disorganization",
+            "Procrastination",
+            "Inconsistent sleep"
+          ]
+        },
+        {
+          "id": "wellness-goals-question",
+          "message": "Got it! Now, what are you hoping to work on?",
+          "is_user": false,
+          "created_at": "2025-03-03T08:05:00.000000",
+          "message_type": "button",
+          "resources": [],
+          "buttons": [
+            "Break bad habits",
+            "Build discipline & consistency",
+            "Improve focus & productivity",
+            "Practice mindfulness & self-awareness",
+            "Reduce stress & anxiety",
+            "Enhance motivation & willpower",
+            "Develop a positive mindset",
+            "Improve sleep quality",
+            "Better work-life balance",
+            "Develop healthy habits",
+            "Get more active"
+          ]
+        },
+        {
+          "id": "check-in-style-question",
+          "message": "How do you want me to check in with you?",
+          "is_user": false,
+          "created_at": "2025-03-03T08:08:00.000000",
+          "message_type": "button",
+          "resources": [],
+          "buttons": [
+            "Hype me up!",
+            "Gentle & Encouraging",
+            "Just give me facts & tips",
+            "Mix it up!"
+          ]
         }
-    ]
+      ]
 }
