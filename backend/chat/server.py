@@ -45,7 +45,7 @@ async def chat(
             chat_id=chat.id,
             content="",  # Empty placeholder
             is_user=False,
-            type="text",  # TODO: Add type
+            type="text",  # TODO: Add type and type handling logic
             db=db,
         )
 
@@ -55,6 +55,11 @@ async def chat(
             "created_at": ai_message.created_at.isoformat(),
             "message_type": ai_message.type,
         }
+
+        if ai_message.type == "button":
+            message_data["buttons"] = ai_message.buttons
+        elif ai_message.type == "resource":
+            message_data["resources"] = ai_message.resources
 
         async def stream_with_ids():
             yield f"data: {json.dumps(message_data)}\n\n"
