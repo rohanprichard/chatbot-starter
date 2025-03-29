@@ -30,14 +30,14 @@ router = APIRouter()
 
 @router.post("/token", response_model=TokenResponse)
 async def login_for_access_token(
-    token_request: TokenRequest, db: Session = Depends(get_db)
+    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ) -> Dict[str, str]:
-    # Authenticate the user using the provided email and password.
-    user = authenticate_user(db, token_request.email, token_request.password)
+    # Authenticate the user using the provided username and password.
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Incorrect username or password",
         )
     # Create the JWT token without any client id/secret
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
